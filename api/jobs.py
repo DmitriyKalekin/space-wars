@@ -1,37 +1,30 @@
 import aiomysql
 import asyncio
-
-class JobsHandler:
-
-    def __init__(self, model):
-        self.model = model
-
-    async def hello(self, **kvargs):
-        print("hello", kvargs)
-
-    async def search_planet(self, **kvargs):
-        await self.model.make_record(**kvargs)
-
-    async def hello(self, **kvargs):
-        
+import json
+from api.model import Model
 
 
-    async def jobs_loop(self, jobs):
-        while True:
-            if jobs:
-                task = jobs.pop(0)
-                await self.process_task(task)
-            await asyncio.sleep(1) # app.CFG.JOBS["sleep"]
-        return
+
+async def jobs_loop(model:Model, jobs:list):
+    """
+    """
+    counter = 0
+    while True:
+        print("Background task")
+        await model.process_updates()
+        await asyncio.sleep(1)
+
+        counter += 1
+        if counter >= 10:
+            await model.drop_cache()
+            counter = 0
+    return
 
 
-    async def process_task(self, task: dict):
-        # obj = JobsHandler(app.loop)
-        # try:
-        method_to_call = getattr(self, task["job"])
-        await method_to_call(**task["params"])
-        # except AttributeError as e:
-            # print(f"{task['job']} not found {e}")
-        # except Exception as e:
-            # raise e
-        return
+    
+
+
+
+
+
+

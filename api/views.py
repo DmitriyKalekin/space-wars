@@ -10,12 +10,10 @@ async def index():
 
 @app.route("/start_job")
 async def start_job():
-    app.jobs.append({"job": "hello", "params": {"a": 1, "b": 2}})
-    app.jobs.append({"job": "search_planet", "params": {"a": 1, "b": 2}})
-
+    player_id = 32768
+    payload = {"name": "explore_near_space", "params": {"a": 1, "b": 2}}
+    await app.model.create_job(player_id, payload)
     return Response(json.dumps({"status": "ok"}), mimetype='application/json')
-
-
 
 @app.errorhandler(400)
 def bad_request(e):
